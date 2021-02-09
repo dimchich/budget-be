@@ -1,0 +1,37 @@
+# group API
+
+###
+# baseURL
+@baseURL = http://localhost:3000
+
+###
+# Find all groups
+GET {{baseURL}}/groups
+
+###
+# Find Group by Id
+GET {{baseURL}}/groups/1
+
+###
+# Add Group
+POST {{baseURL}}/groups
+Content-Type: application/json
+
+{
+  "name": "Test",
+  "author": 2
+}
+
+###
+# Edit Group by Id
+PUt {{baseURL}}/groups/8
+Content-Type: application/json
+
+{
+  "name": "Test update",
+  "author": 2
+}
+
+###
+# Del group by id
+DELETE {{baseURL}}/groups/9

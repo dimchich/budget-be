@@ -18,7 +18,7 @@ class UserService {
   public async findUserById(userId: number): Promise<User> {
     const userRepository = getRepository(this.users);
     const findUser: User = await userRepository.findOne({ where: { id: userId } });
-    if (!findUser) throw new HttpException(409, "You're not user");
+    if (!findUser) throw new HttpException(404, 'User not found');
 
     return findUser;
   }

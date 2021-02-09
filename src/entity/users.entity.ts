@@ -1,6 +1,7 @@
-import { Entity, PrimaryGeneratedColumn, Column, Unique, CreateDateColumn, UpdateDateColumn } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, Unique, CreateDateColumn, UpdateDateColumn, OneToMany } from 'typeorm';
 import { IsNotEmpty } from 'class-validator';
 import { User } from '../interfaces/users.interface';
+import { GroupEntity } from './groups.entity';
 
 @Entity()
 @Unique(['email'])
@@ -23,4 +24,7 @@ export class UserEntity implements User {
   @Column()
   @UpdateDateColumn()
   updatedAt: Date;
+
+  @OneToMany(() => GroupEntity, group => group.author)
+  groups: GroupEntity[];
 }
