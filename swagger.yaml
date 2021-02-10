@@ -1,34 +1,66 @@
+openapi: 3.0.0
+
+info:
+  title: 'Budget API'
+  version: '0.1.0'
+  description: 'Api docs'
+
 tags:
+- name: auth
+  description: auth API
 - name: users
   description: users API
 - name: groups
   description: groups API
 
 paths:
-# [GET] users
+  /login:
+    post:
+      tags:
+      - auth
+      summary: Logs in and returns the authentication  cookie
+      requestBody:
+        required: true
+        description: A JSON object containing the login and password.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
+      security: []
+      responses:
+        200:
+          description: >
+            Successfully authenticated.
+            The session ID is returned in a cookie named `Authorization`. You need to include this cookie in subsequent requests.
+          headers: 
+            Set-Cookie:
+              schema: 
+                type: string
+                example: Authorization=abcde12345; HttpOnly; Max-Age=3600;
   /users:
+    # [GET] users
     get:
       tags:
       - users
       summary: Find All Users
+      security: []
       responses:
         200:
           description: 'OK'
         500:
           description: 'Server Error'
 
-# [POST] users
+    # [POST] users
     post:
       tags:
       - users
       summary: Add User
-      parameters:
-      - name: body
-        in: body
-        description: user Data
+      requestBody:
         required: true
-        schema:
-          $ref: '#/definitions/users'
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserCreate'
       responses:
         201:
           description: 'Created'
@@ -39,18 +71,19 @@ paths:
         500:
           description: 'Server Error'
 
-# [GET] users/id
   /users/{id}:
+    # [GET] users/id
     get:
       tags:
       - users
       summary: Find User By Id
       parameters:
-      - name: id
-        in: path
+      - in: path
+        name: id
         description: User Id
         required: true
-        type: integer
+        schema:
+          type: integer
       responses:
         200:
           description: 'OK'
@@ -59,23 +92,17 @@ paths:
         500:
           description: 'Server Error'
 
-# [PUT] users/id
+    # [PUT] users/id
     put:
       tags:
       - users
       summary: Update User By Id
-      parameters:
-      - name: id
-        in: path
-        description: user Id
+      requestBody:
         required: true
-        type: integer
-      - name: body
-        in: body
-        description: user Data
-        required: true
-        schema:
-          $ref: '#/definitions/users'
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserDto'
       responses:
         200:
           description: 'OK'
@@ -86,7 +113,7 @@ paths:
         500:
           description: 'Server Error'
 
-# [DELETE] users/id
+    # [DELETE] users/id
     delete:
       tags:
       - users
@@ -96,7 +123,8 @@ paths:
         in: path
         description: user Id
         required: true
-        type: integer
+        schema:
+          type: integer
       responses:
         200:
           description: 'OK'
@@ -105,8 +133,8 @@ paths:
         500:
           description: 'Server Error'
 
-# [GET] groups
   /groups:
+    # [GET] groups
     get:
       tags:
       - groups
@@ -116,26 +144,25 @@ paths:
           description: 'OK'
         500:
           description: 'Server error'
-# [POST] groups
+    # [POST] groups
     post:
       tags:
       - groups
       summary: Add group
-      parameters:
-      - name: body
-        in: body
-        description: group Data
+      requestBody:
         required: true
-        schema:
-          $ref: '#definitions/groups'
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GroupCreate'
       responses:
         201:
           description: 'Created'
         400:
           description: 'Bad request'
 
-# [GET] groups/id
   /groups/{id}:
+    # [GET] groups/id
     get:
       tags:
       - groups
@@ -145,30 +172,25 @@ paths:
         in: path
         description: Group id
         required: true
-        type: integer
+        schema:
+          type: integer
       responses:
         200:
           description: 'OK'
         404:
           description: 'Not found'
 
-# [PUT] groups/id
+    # [PUT] groups/id
     put:
       tags:
       - groups
       summary: Update group by Id
-      parameters:
-      - name: id
-        in: path
-        description: Group id
+      requestBody:
         required: true
-        type: integer
-      - name: body
-        in: body
-        description: group Data
-        required: true
-        schema:
-          $ref: '#definitions/groups'
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GroupDto'
       responses:
         200:
           description: 'OK'
@@ -177,68 +199,103 @@ paths:
         404:
           description: 'Not found'
       
-# [DELETE] groups/id
+    # [DELETE] groups/id
     delete:    
       tags:
       - groups
-      summary: Update group by Id
+      summary: Delete group by Id
       parameters:
       - name: id
         in: path
         description: Group id
         required: true
-        type: integer
+        schema:
+          type: integer
       responses:
         200:
           description: 'OK'
         404:
           description: 'Not found'
 
-# definitions
-definitions:
-  users:
-    type: object
-    required:
+
+components:
+  securitySchemes:
+    cookieAuth:
+      type: apiKey
+      in: cookie
+      name: Authorization
+
+  schemas:
+    # Auth
+    LoginRequest:
+      type: object
+      required:
         - email
         - password
-    properties:
-      id:
-        type: integer
-        description: user Id
-      email:
-        type: string
-        description: user Email
-      password:
-        type: string
-        description: user Password
-  
-  groups:
-    type: object
-    required:
-      - name
-      - author
-    properties:
-      name:
-        type: string
-        description: group Name
-      author:
-        type: integer
-        description: author Id
-  groupsDto:
-    type: object
-    required:
-      - name
-      - authorId
-    properties:
-      id:
-        type: integer
-        description: group Id
-      name:
-        type: string
-        description: group Name
-      authorId:
-        type: integer
-        description: author Id
-schemes:
- - https
- - http
+      properties:
+        email:
+          type: string
+          description: user Email
+        password:
+          type: string
+          description: user Password
+    # Users
+    UserCreate:
+      type: object
+      required:
+        - email
+        - password
+      properties:
+        email:
+          type: string
+          description: user Email
+        password:
+          type: string
+          description: user Password
+    UserDto:
+      type: object
+      required:
+          - email
+          - password
+      properties:
+        id:
+          type: integer
+          description: user Id
+        email:
+          type: string
+          description: user Email
+        password:
+          type: string
+          description: user Password
+    # Groups
+    GroupCreate:
+      type: object
+      required:
+        - name
+        - author
+      properties:
+        name:
+          type: string
+          description: group Name
+        author:
+          type: integer
+          description: author Id
+    GroupDto:
+      type: object
+      required:
+        - name
+        - authorId
+      properties:
+        id:
+          type: integer
+          description: group Id
+        name:
+          type: string
+          description: group Name
+        authorId:
+          type: integer
+          description: author Id
+
+  responses:
+    UnauthorizedError:
+      description: Access token is missing or invalid
