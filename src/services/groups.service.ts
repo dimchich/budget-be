@@ -11,8 +11,6 @@ class GroupService {
   private userService = new userService();
 
   static toDTO(group: Group): GroupDto {
-    console.log(group);
-    console.log(group.authorId);
     const dto: GroupDto = {
       id: group.id,
       name: group.name,
