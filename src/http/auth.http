@@ -10,8 +10,8 @@ POST {{baseURL}}/signup
 Content-Type: application/json
 
 {
-    "email": "example@gmail.com",
-	"password": "qwer1234"
+    "email": "example@email.com",
+	"password": "q1w2e3r4"
 }
 
 ###
@@ -20,7 +20,7 @@ POST {{baseURL}}/signup
 Content-Type: application/json
 
 {
-    "email": "lim@gmail.com",
+    "email": "example@email.com",
 	"password": "q1w2e3r4"
 }
 
@@ -30,7 +30,7 @@ POST {{baseURL}}/login
 Content-Type: application/json
 
 {
-    "email": "lim@gmail.com",
+    "email": "example@email.com",
 	"password": "q1w2e3r4"
 }
 
@@ -40,6 +40,6 @@ POST {{baseURL}}/logout
 Content-Type: application/json
 
 {
-    "email": "lim@gmail.com",
+    "email": "example@email.com",
 	"password": "q1w2e3r4"
 }
