@@ -1,4 +1,5 @@
-import { NextFunction, Request, Response } from 'express';
+import { NextFunction, Response } from 'express';
+import { RequestWithUser } from '../interfaces/auth.interface';
 import { CreateGroupDto, GroupDto } from '../dtos/groups.dto';
 import { Group } from '../interfaces/groups.interface';
 import groupService from '../services/groups.service';
@@ -6,7 +7,7 @@ import groupService from '../services/groups.service';
 class GroupController {
   public groupService = new groupService();
 
-  public getGroups = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+  public getGroups = async (req: RequestWithUser, res: Response, next: NextFunction): Promise<void> => {
     try {
       const findAllGroupsData: GroupDto[] = await this.groupService.filndAllgroups();
 
@@ -16,7 +17,7 @@ class GroupController {
     }
   };
 
-  public getGroupById = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+  public getGroupById = async (req: RequestWithUser, res: Response, next: NextFunction): Promise<void> => {
     try {
       const groupId = Number(req.params.id);
       const groupData: GroupDto = await this.groupService.findGroupById(groupId);
@@ -27,7 +28,7 @@ class GroupController {
     }
   };
 
-  public createGroup = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+  public createGroup = async (req: RequestWithUser, res: Response, next: NextFunction): Promise<void> => {
     try {
       const groupData: CreateGroupDto = req.body;
       const createGroupData: GroupDto = await this.groupService.createGroup(groupData);
@@ -38,7 +39,7 @@ class GroupController {
     }
   };
 
-  public updateGroup = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+  public updateGroup = async (req: RequestWithUser, res: Response, next: NextFunction): Promise<void> => {
     try {
       const groupId = Number(req.params.id);
       const groupData: Group = req.body;
@@ -50,7 +51,7 @@ class GroupController {
     }
   };
 
-  public deleteGroup = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+  public deleteGroup = async (req: RequestWithUser, res: Response, next: NextFunction): Promise<void> => {
     try {
       const groupId = Number(req.params.id);
       const deleteGroupData: GroupDto = await this.groupService.deleteGroup(groupId);
