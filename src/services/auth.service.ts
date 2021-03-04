@@ -39,7 +39,7 @@ class AuthService {
     if (isEmpty(userData)) throw new HttpException(400, "You're not userData");
 
     const userRepository = getRepository(this.users);
-    const findUser: User = await userRepository.findOne({ where: { password: userData.password } });
+    const findUser: User = await userRepository.findOne({ where: { id: userData.id } });
     if (!findUser) throw new HttpException(409, "You're not user");
 
     return findUser;

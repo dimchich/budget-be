@@ -15,20 +15,26 @@ const authMiddleware = async (req: RequestWithUser, res: Response, next: NextFun
       const userId = verificationResponse.id;
 
       const userRepository = getRepository(UserEntity);
-      const findUser = await userRepository.findOne(userId, { select: ['id', 'email', 'password'] });
+      const findUser = await userRepository.findOne(userId, { select: ['id', 'name', 'email'] });
 
       if (findUser) {
         req.user = findUser;
-        next();
-      } else {
-        next(new HttpException(401, 'Wrong authentication token'));
       }
-    } else {
-      next(new HttpException(404, 'Authentication token missing'));
     }
+    next();
   } catch (error) {
     next(new HttpException(401, 'Wrong authentication token'));
   }
 };
 
-export default authMiddleware;
+const notLoggedIn = async (req: RequestWithUser, res: Response, next: NextFunction) => {
+  if (req.user) next(new HttpException(403, 'Forbidden'));
+  next();
+};
+
+const isLoggedIn = async (req: RequestWithUser, res: Response, next: NextFunction) => {
+  if (!req.user) next(new HttpException(403, 'Forbidden'));
+  next();
+};
+
+export { authMiddleware, notLoggedIn, isLoggedIn };

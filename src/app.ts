@@ -11,6 +11,7 @@ import swaggerJSDoc from 'swagger-jsdoc';
 import { createConnection } from 'typeorm';
 import { dbConnection } from './database';
 import Routes from './interfaces/routes.interface';
+import { authMiddleware } from './middlewares/auth.middleware';
 import errorMiddleware from './middlewares/error.middleware';
 import { logger, stream } from './utils/logger';
 
@@ -66,6 +67,7 @@ class App {
     this.app.use(express.json());
     this.app.use(express.urlencoded({ extended: true }));
     this.app.use(cookieParser());
+    this.app.use(authMiddleware);
   }
 
   private initializeRoutes(routes: Routes[]) {
