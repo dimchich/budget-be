@@ -14,11 +14,40 @@ tags:
   description: groups API
 
 paths:
+  /signup:
+    post:
+      tags:
+      - auth
+      summary: Create user and logs in
+      requestBody:
+        required: true
+        description: JOSN CreateUser
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserCreate'
+      security: []
+      responses:
+        200:
+          description: >
+            Successfully authenticated.
+            The session ID is returned in a cookie named `Authorization`. You need to include this cookie in subsequent requests.
+          headers: 
+            Set-Cookie:
+              schema: 
+                type: string
+                example: Authorization=abcde12345; HttpOnly; Max-Age=3600;
+        400:
+          description: 'Bad Request'
+        409:
+          description: 'Conflict'
+        500:
+          description: 'Server Error'
   /login:
     post:
       tags:
       - auth
-      summary: Logs in and returns the authentication  cookie
+      summary: Logs in and returns the authentication cookie
       requestBody:
         required: true
         description: A JSON object containing the login and password.
@@ -37,6 +66,27 @@ paths:
               schema: 
                 type: string
                 example: Authorization=abcde12345; HttpOnly; Max-Age=3600;
+        404:
+          description: 'User not found'
+  /logout:
+    post:
+      tags:
+        - auth
+      summary: Logs out and returns empty authentication  cookie
+      security: []
+      responses:
+        200:
+          description: >
+            Successfully authenticated.
+            The session ID is returned in a cookie named `Authorization`. You need to include this cookie in subsequent requests.
+          headers: 
+            Set-Cookie:
+              schema: 
+                type: string
+                example: Authorization=abcde12345; HttpOnly; Max-Age=3600;
+        500:
+          description: 'Server Error'
+
   /users:
     # [GET] users
     get:
@@ -237,12 +287,12 @@ components:
     LoginRequest:
       type: object
       required:
-        - email
+        - name
         - password
       properties:
-        email:
+        name:
           type: string
-          description: user Email
+          description: user Name
         password:
           type: string
           description: user Password
