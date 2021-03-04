@@ -4,7 +4,7 @@ import { User } from '../interfaces/users.interface';
 import { GroupEntity } from './groups.entity';
 
 @Entity()
-@Unique(['email'])
+@Unique(['email', 'name'])
 export class UserEntity implements User {
   @PrimaryGeneratedColumn()
   id: number;
@@ -12,6 +12,10 @@ export class UserEntity implements User {
   @Column()
   @IsNotEmpty()
   email: string;
+
+  @Column()
+  @IsNotEmpty()
+  name: string;
 
   @Column()
   @IsNotEmpty()

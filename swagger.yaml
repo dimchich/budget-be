@@ -97,12 +97,19 @@ paths:
       tags:
       - users
       summary: Update User By Id
+      parameters:
+      - name: id
+        in: path
+        description: user Id
+        required: true
+        schema:
+          type: integer
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/UserDto'
+              $ref: '#/components/schemas/UserCreate'
       responses:
         200:
           description: 'OK'
@@ -244,11 +251,15 @@ components:
       type: object
       required:
         - email
+        - name
         - password
       properties:
         email:
           type: string
           description: user Email
+        name:
+          type: string
+          description: user Name
         password:
           type: string
           description: user Password
@@ -264,9 +275,9 @@ components:
         email:
           type: string
           description: user Email
-        password:
+        name:
           type: string
-          description: user Password
+          description: user Name
     # Groups
     GroupCreate:
       type: object

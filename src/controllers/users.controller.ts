@@ -1,6 +1,5 @@
 import { NextFunction, Request, Response } from 'express';
-import { CreateUserDto } from '../dtos/users.dto';
-import { User } from '../interfaces/users.interface';
+import { CreateUserDto, UserDto } from '../dtos/users.dto';
 import userService from '../services/users.service';
 
 class UsersController {
@@ -8,7 +7,7 @@ class UsersController {
 
   public getUsers = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
-      const findAllUsersData: User[] = await this.userService.findAllUser();
+      const findAllUsersData: UserDto[] = await this.userService.findAllUser();
 
       res.status(200).json({ data: findAllUsersData, message: 'findAll' });
     } catch (error) {
@@ -19,7 +18,7 @@ class UsersController {
   public getUserById = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
       const userId = Number(req.params.id);
-      const findOneUserData: User = await this.userService.findUserById(userId);
+      const findOneUserData: UserDto = await this.userService.findUserById(userId);
 
       res.status(200).json({ data: findOneUserData, message: 'findOne' });
     } catch (error) {
@@ -30,7 +29,7 @@ class UsersController {
   public createUser = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
       const userData: CreateUserDto = req.body;
-      const createUserData: User = await this.userService.createUser(userData);
+      const createUserData: UserDto = await this.userService.createUser(userData);
 
       res.status(201).json({ data: createUserData, message: 'created' });
     } catch (error) {
@@ -41,8 +40,9 @@ class UsersController {
   public updateUser = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
       const userId = Number(req.params.id);
-      const userData: User = req.body;
-      const updateUserData: User = await this.userService.updateUser(userId, userData);
+      // TODO use DTO
+      const userData: CreateUserDto = req.body;
+      const updateUserData: UserDto = await this.userService.updateUser(userId, userData);
 
       res.status(200).json({ data: updateUserData, message: 'updated' });
     } catch (error) {
@@ -53,7 +53,7 @@ class UsersController {
   public deleteUser = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
       const userId = Number(req.params.id);
-      const deleteUserData: User = await this.userService.deleteUser(userId);
+      const deleteUserData: UserDto = await this.userService.deleteUser(userId);
 
       res.status(200).json({ data: deleteUserData, message: 'deleted' });
     } catch (error) {
